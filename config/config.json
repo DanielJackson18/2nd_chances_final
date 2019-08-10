@@ -1,21 +1,29 @@
 {
   "development": {
     "username": "root",
-    "password": null,
-    "database": "exampledb",
+    "port": 3306,
+    "password": "",
+    "database": "secondchance_db",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
+    "port":3306,
+    "password": "",
     "database": "testdb",
     "host": "localhost",
-    "dialect": "mysql",
-    "logging": false
+    "dialect": "mysql"
+    
   },
   "production": {
-    "use_env_variable": "JAWSDB_URL",
+    "username": "root",
+    "port": 3306,
+    "password": "",
+    "database": "database_production",
+    "host": "127.0.0.1",
     "dialect": "mysql"
-  }
 }
+
+  }
+

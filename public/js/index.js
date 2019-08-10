@@ -1,99 +1,108 @@
-// Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+var lineItems = [];
 
-// The API object contains methods for each kind of request we'll make
-var API = {
-  saveExample: function(example) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
-    });
-  },
-  getExamples: function() {
-    return $.ajax({
-      url: "api/examples",
-      type: "GET"
-    });
-  },
-  deleteExample: function(id) {
-    return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
-    });
-  }
+class UI {
+    
+    static displayAnimals(j) {
+        console.log(j);
+        if (document.querySelector(".animals") != null) {
+            document.querySelector(".animals").innerHTML = "<div id='card'> </div>";
+        }
+        //Set params as variables
+        let k = lineItems[j];
+        let
+            type = k.type,
+            breed = k.breed,
+            sex= k.sex,
+            age = k.age,
+            size = k.size,
+            color = k.color;
+            
+
+        const animals = document.querySelector(".animals");
+        const card_body = document.createElement('card-body');
+        card_body.innerHTML = `
+            <p class="text-center">${type}</p>
+            <p class="text-center">${breed}</p>
+            <p class="text-center">${sex}</p>
+            <p class="text-center">${age}</p>
+            <p class="text-center">${size}</p>
+            <p class="text-center">${color}</p>
+            `
+        animals.appendChild(card_body);
+    };
+    static addToList(type2, breed2, sex2, age2, size2, color2,j) {
+
+        let type = type2;
+        let breed = breed2;
+        let sex = sex2;
+        let age = age2;
+        let size = size2;
+        let color = color2;
+        const list = document.querySelector('#search-list');
+        
+        const row = document.createElement('tr');
+      
+        row.onclick = function(e) {
+
+            }
+            //.addEventListener('click', function(){ alert('blah');}, false);
+
+        $(row).data("type", type);
+        $(row).data("breed", breed);
+        $(row).data("sex", sex);
+        $(row).data("age", age);
+        $(row).data("size", size);
+        $(row).data("color", color);
+        
+        //add columns to table
+        row.innerHTML = `
+        <td onclick="UI.showanimals(this)" id="r_` + j.toString() + `">${type}</td>
+        <td>${breed}</td>
+        <td onclick="deleteanimals(this)" class="btn btn-outline-danger btn-lg delete">Don't like this place</td> 
+        `;
+        list.appendChild(row);
+    }
+    static showanimals(el) {
+
+        openNav();
+        UI.displayanimals(parseInt(el.id.replace("r_", "")));
+    }
+
+    //Delect Location
+    static deleteAnimals(element) {
+        if (element.classList.contains('delete')) {
+            //targets the parentelement of class (delete) which is <td>
+            //We need to remove the whole row, so another parentElement which is <tr>
+            element.parentElement.remove();
+        }
+    }
+    //Clears the input fields after clicking submit
+    static clearFields() {
+ 
+        document.querySelector('#animals').value = '';
+    };
+    //Show Validation Message when inputs are invalid
+    static validateMessage(message, className) {
+        const div = document.createElement('div');
+        div.className = `alert alert-${className}`;
+        div.appendChild(document.createTextNode(message));
+        const container = document.querySelector('.container');
+        const form = document.querySelector('#search-form');
+        container.insertBefore(div, form);
+        //Set timeout so it does not stay on the screen
+        //set for 3s
+        setTimeout(() => document.querySelector('.alert').remove(),
+            3000)
+    };
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+function openNav() {
+    document.getElementById("mySidenav").style.width = "20%";
+    document.getElementById("main").style.marginLeft = "20%";
+}
 
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
-
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
-
-      $li.append($button);
-
-      return $li;
-    });
-
-    $exampleList.empty();
-    $exampleList.append($examples);
-  });
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft = "0";
 };
-
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
-  event.preventDefault();
-
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
-  };
-
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
-  }
-
-  API.saveExample(example).then(function() {
-    refreshExamples();
-  });
-
-  $exampleText.val("");
-  $exampleDescription.val("");
-};
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
-  });
-};
-
-// Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);

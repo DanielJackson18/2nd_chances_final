@@ -1,7 +1,38 @@
 module.exports = function(sequelize, DataTypes) {
-  var Example = sequelize.define("Example", {
-    text: DataTypes.STRING,
-    description: DataTypes.TEXT
-  });
-  return Example;
-};
+  const Sequelize = require('sequelize');
+      var Animals = sequelize.define("animals", {
+      description: DataTypes.TEXT,
+          type: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              primaryKey: true
+          },
+          breed: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              required: true
+          },
+          sex: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              require: true
+          },
+          age: {
+              type: Sequelize.INTEGER(11),
+              allowNull: false,
+              required: true
+          },
+          size: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              defaultValue: 0.0
+          },
+          color: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              defaultValue: 0.0
+          },
+          
+    });
+    return Animals;
+  };
