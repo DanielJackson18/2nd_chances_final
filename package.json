@@ -16,7 +16,7 @@
     "dotenv": "^6.0.0",
     "env": "0.0.2",
     "envelope": "^2.0.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.1.5",
     "express-handlebars": "^3.0.0",
     "fetch-jsonp": "^1.1.3",
